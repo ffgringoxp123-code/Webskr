@@ -1,427 +1,64 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sakura Raw</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0d0d0d;
-            color: #e0e0e0;
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        header {
-            text-align: center;
-            padding: 30px 0 10px 0;
-            border-bottom: 1px solid #2a2a2a;
-            margin-bottom: 30px;
-        }
-        header h1 {
-            font-size: 3rem;
-            letter-spacing: 4px;
-            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        header p {
-            color: #888;
-            margin-top: 5px;
-        }
-        .editor-area {
-            background: #1a1a1a;
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid #2a2a2a;
-            margin-bottom: 20px;
-        }
-        .editor-area textarea {
-            width: 100%;
-            min-height: 250px;
-            background: #111;
-            border: 1px solid #333;
-            border-radius: 8px;
-            color: #e0e0e0;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            padding: 15px;
-            resize: vertical;
-            outline: none;
-            transition: border 0.2s;
-        }
-        .editor-area textarea:focus {
-            border-color: #f8b4c8;
-        }
-        .input-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-        .input-group input {
-            flex: 1;
-            min-width: 200px;
-            padding: 12px 16px;
-            background: #111;
-            border: 1px solid #333;
-            border-radius: 8px;
-            color: #e0e0e0;
-            font-size: 14px;
-            outline: none;
-            transition: border 0.2s;
-        }
-        .input-group input:focus {
-            border-color: #f8b4c8;
-        }
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #f8b4c8, #c084fc);
-            color: #0d0d0d;
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(248, 180, 200, 0.3);
-        }
-        .btn-danger {
-            background: #ff4d4d;
-            color: white;
-        }
-        .btn-danger:hover {
-            background: #e04343;
-        }
-        .btn-outline {
-            background: transparent;
-            border: 1px solid #444;
-            color: #e0e0e0;
-        }
-        .btn-outline:hover {
-            border-color: #f8b4c8;
-            color: #f8b4c8;
-        }
-        .paste-list {
-            margin-top: 20px;
-        }
-        .paste-list h2 {
-            font-size: 1.2rem;
-            color: #aaa;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        .paste-item {
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 10px;
-            padding: 15px 20px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: border 0.2s;
-        }
-        .paste-item:hover {
-            border-color: #f8b4c8;
-        }
-        .paste-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        .paste-name {
-            font-weight: 600;
-            color: #f8b4c8;
-            font-size: 1.1rem;
-        }
-        .paste-id {
-            color: #666;
-            font-size: 0.8rem;
-            font-family: monospace;
-        }
-        .paste-actions {
-            display: flex;
-            gap: 8px;
-        }
-        .paste-actions a {
-            text-decoration: none;
-        }
-        .btn-raw {
-            background: #2a2a2a;
-            color: #f8b4c8;
-            border: 1px solid #f8b4c8;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .btn-raw:hover {
-            background: #f8b4c8;
-            color: #0d0d0d;
-        }
-        .btn-delete {
-            background: transparent;
-            border: 1px solid #ff4d4d;
-            color: #ff4d4d;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .btn-delete:hover {
-            background: #ff4d4d;
-            color: white;
-        }
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: #1a1a1a;
-            border: 1px solid #f8b4c8;
-            padding: 15px 25px;
-            border-radius: 10px;
-            color: #f8b4c8;
-            font-weight: 500;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s;
-            z-index: 999;
-        }
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .footer {
-            text-align: center;
-            padding: 30px 0;
-            color: #444;
-            font-size: 0.8rem;
-        }
-        .footer span {
-            color: #f8b4c8;
-        }
-        @media (max-width: 600px) {
-            header h1 { font-size: 2rem; }
-            .paste-item { flex-direction: column; gap: 10px; }
-            .paste-actions { width: 100%; justify-content: flex-end; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sakura Raw</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d0d0d;color:#e0e0e0;font-family:'Courier New',monospace;padding:20px}
+.container{max-width:900px;margin:0 auto}
+h1{color:#f8b4c8;font-size:2.5rem;text-align:center;padding:20px 0;border-bottom:1px solid #2a2a2a;margin-bottom:20px}
+textarea{width:100%;min-height:200px;background:#111;border:1px solid #333;border-radius:6px;color:#e0e0e0;font-family:'Courier New',monospace;font-size:14px;padding:12px;resize:vertical;outline:none}
+textarea:focus{border-color:#f8b4c8}
+.row{display:flex;gap:10px;margin:10px 0;flex-wrap:wrap}
+input{flex:1;min-width:150px;padding:10px 12px;background:#111;border:1px solid #333;border-radius:6px;color:#e0e0e0;font-family:'Courier New',monospace;font-size:14px;outline:none}
+input:focus{border-color:#f8b4c8}
+button{padding:10px 20px;border:none;border-radius:6px;font-family:'Courier New',monospace;font-size:14px;font-weight:bold;cursor:pointer;text-transform:uppercase}
+.btn-save{background:#f8b4c8;color:#0d0d0d}
+.btn-save:hover{background:#e090b0}
+.btn-clear{background:#333;color:#e0e0e0}
+.btn-clear:hover{background:#444}
+.paste-item{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:6px;padding:12px 16px;margin:8px 0;display:flex;justify-content:space-between;align-items:center}
+.paste-name{color:#f8b4c8;font-weight:bold;font-size:1.1rem}
+.raw-link{background:#2a2a2a;color:#f8b4c8;border:1px solid #f8b4c8;padding:5px 12px;border-radius:4px;font-size:12px;text-transform:uppercase;text-decoration:none;cursor:pointer;font-family:'Courier New',monospace}
+.raw-link:hover{background:#f8b4c8;color:#0d0d0d}
+.btn-del{background:transparent;border:1px solid #ff4d4d;color:#ff4d4d;padding:5px 12px;border-radius:4px;font-size:12px;cursor:pointer;margin-left:8px;font-family:'Courier New',monospace}
+.btn-del:hover{background:#ff4d4d;color:white}
+.actions{display:flex;gap:5px;align-items:center}
+.info{color:#555;text-align:center;padding:20px;font-size:14px}
+#toast{position:fixed;bottom:20px;right:20px;background:#1a1a1a;border:1px solid #f8b4c8;padding:12px 20px;border-radius:6px;color:#f8b4c8;font-size:13px;opacity:0;transition:all 0.3s;z-index:999}
+#toast.show{opacity:1}
+</style>
 </head>
 <body>
-
 <div class="container">
-    <header>
-        <h1>✦ SAKURA ✦</h1>
-        <p>raw sharing · giống pastefy &amp; github</p>
-    </header>
-
-    <!-- Create / Edit -->
-    <div class="editor-area">
-        <textarea id="scriptContent" placeholder="Paste script của bạn vào đây..."></textarea>
-        <div class="input-group">
-            <input type="text" id="pasteName" placeholder="Tên raw (ví dụ: my-script)">
-            <button class="btn btn-primary" onclick="savePaste()">💾 Lưu</button>
-            <button class="btn btn-outline" onclick="clearForm()">✕ Mới</button>
-        </div>
-    </div>
-
-    <!-- List -->
-    <div class="paste-list">
-        <h2>📦 Raw của bạn</h2>
-        <div id="pasteListContainer"></div>
-    </div>
-
-    <div class="footer">
-        <span>sakura</span> · dữ liệu lưu trên trình duyệt của bạn
-    </div>
+<h1>SAKURA RAW</h1>
+<textarea id="content" placeholder="Nhap script cua ban vao day..."></textarea>
+<div class="row">
+<input type="text" id="name" placeholder="Ten raw">
+<button class="btn-save" onclick="save()">Luu</button>
+<button class="btn-clear" onclick="clearForm()">Moi</button>
 </div>
-
-<!-- Toast -->
-<div id="toast" class="toast"></div>
-
+<div id="list"></div>
+<div class="info">sakura raw — du lieu luu tren trinh duyet</div>
+</div>
+<div id="toast"></div>
 <script>
-    // ====== DATA LAYER ======
-    const STORAGE_KEY = 'sakura_raw_data';
-
-    function getAllPastes() {
-        try {
-            return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-        } catch { return []; }
-    }
-
-    function saveAllPastes(pastes) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(pastes));
-    }
-
-    function generateId() {
-        const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-        let id = '';
-        for (let i = 0; i < 8; i++) {
-            id += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return id;
-    }
-
-    // ====== UI HELPERS ======
-    function showToast(msg) {
-        const t = document.getElementById('toast');
-        t.textContent = msg;
-        t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 2500);
-    }
-
-    function clearForm() {
-        document.getElementById('scriptContent').value = '';
-        document.getElementById('pasteName').value = '';
-    }
-
-    // ====== CORE OPERATIONS ======
-    function savePaste() {
-        const content = document.getElementById('scriptContent').value.trim();
-        const name = document.getElementById('pasteName').value.trim();
-
-        if (!content) {
-            showToast('⚠️ Vui lòng nhập nội dung script');
-            return;
-        }
-        if (!name) {
-            showToast('⚠️ Vui lòng nhập tên cho raw');
-            return;
-        }
-
-        const pastes = getAllPastes();
-
-        // Nếu đã tồn tại tên, hỏi có ghi đè không
-        const existingIndex = pastes.findIndex(p => p.name === name);
-        if (existingIndex !== -1) {
-            if (!confirm(`"${name}" đã tồn tại. Bạn có muốn ghi đè không?`)) {
-                return;
-            }
-            pastes[existingIndex].content = content;
-            pastes[existingIndex].updatedAt = new Date().toISOString();
-        } else {
-            pastes.push({
-                id: generateId(),
-                name: name,
-                content: content,
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            });
-        }
-
-        saveAllPastes(pastes);
-        renderPasteList();
-        clearForm();
-        showToast(`✅ Đã lưu "${name}"`);
-    }
-
-    function deletePaste(name) {
-        if (!confirm(`Xóa "${name}"?`)) return;
-        let pastes = getAllPastes();
-        pastes = pastes.filter(p => p.name !== name);
-        saveAllPastes(pastes);
-        renderPasteList();
-        showToast(`🗑️ Đã xóa "${name}"`);
-    }
-
-    // ====== RAW VIEWER ======
-    function openRaw(name) {
-        const pastes = getAllPastes();
-        const paste = pastes.find(p => p.name === name);
-        if (!paste) {
-            showToast('❌ Không tìm thấy raw');
-            return;
-        }
-
-        // Mở cửa sổ mới hiển thị raw
-        const rawWindow = window.open('', '_blank');
-        rawWindow.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${paste.name} · raw</title><style>body{background:#0d0d0d;color:#e0e0e0;font-family:'Courier New',monospace;font-size:14px;padding:20px;white-space:pre-wrap;word-break:break-all;margin:0;}pre{margin:0;}</style></head><body><pre>${paste.content.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre></body></html>`);
-        rawWindow.document.close();
-    }
-
-    // ====== LOAD FROM URL PARAM (raw mode) ======
-    function handleRawRoute() {
-        const params = new URLSearchParams(window.location.search);
-        const rawName = params.get('raw');
-        if (rawName) {
-            const pastes = getAllPastes();
-            const paste = pastes.find(p => p.name === rawName);
-            if (paste) {
-                // Xóa nội dung trang, chỉ hiển thị raw
-                document.body.innerHTML = `<pre style="background:#0d0d0d;color:#e0e0e0;font-family:'Courier New',monospace;font-size:14px;padding:20px;margin:0;white-space:pre-wrap;word-break:break-all;">${paste.content.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre>`;
-                document.title = `${paste.name} · raw sakura`;
-            } else {
-                document.body.innerHTML = `<pre style="background:#0d0d0d;color:#ff4d4d;font-family:monospace;padding:20px;">404 · raw "${rawName}" không tồn tại</pre>`;
-                document.title = '404 · not found';
-            }
-        }
-    }
-
-    // ====== RENDER LIST ======
-    function renderPasteList() {
-        const container = document.getElementById('pasteListContainer');
-        const pastes = getAllPastes();
-
-        if (pastes.length === 0) {
-            container.innerHTML = '<p style="color:#555;text-align:center;padding:20px;">Chưa có raw nào. Tạo raw đầu tiên của bạn!</p>';
-            return;
-        }
-
-        // Sắp xếp mới nhất lên đầu
-        pastes.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-
-        container.innerHTML = pastes.map(p => {
-            const rawUrl = `${window.location.origin}${window.location.pathname}?raw=${encodeURIComponent(p.name)}`;
-            return `
-                <div class="paste-item">
-                    <div class="paste-info">
-                        <span class="paste-name">🌸 ${p.name}</span>
-                        <span class="paste-id">id: ${p.id}</span>
-                    </div>
-                    <div class="paste-actions">
-                        <a href="${rawUrl}" target="_blank" class="btn-raw">🔗 RAW</a>
-                        <button class="btn-delete" onclick="deletePaste('${p.name.replace(/'/g, "\\'")}')">✕</button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-
-    // ====== INIT ======
-    // Kiểm tra nếu đang ở chế độ raw (URL có ?raw=...)
-    if (window.location.search.includes('raw=')) {
-        handleRawRoute();
-    } else {
-        renderPasteList();
-    }
+var KEY='sakura_raws';
+function all(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}}
+function saveAll(d){localStorage.setItem(KEY,JSON.stringify(d))}
+function id8(){var c='abcdefghijklmnopqrstuvwxyz0123456789',r='';for(var i=0;i<8;i++){r+=c.charAt(Math.floor(Math.random()*c.length))}return r}
+function msg(s){var t=document.getElementById('toast');t.textContent=s;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2500)}
+function clearForm(){document.getElementById('content').value='';document.getElementById('name').value=''}
+function save(){var c=document.getElementById('content').value.trim();var n=document.getElementById('name').value.trim();if(!c){msg('Nhap noi dung');return}if(!n){msg('Nhap ten raw');return}var d=all();var idx=-1;for(var i=0;i<d.length;i++){if(d[i].name===n){idx=i;break}}if(idx!==-1){d[idx].content=c;d[idx].updatedAt=new Date().toISOString()}else{d.push({id:id8(),name:n,content:c,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()})}saveAll(d);render();clearForm();msg('Da luu: '+n)}
+function del(n){if(!confirm('Xoa "'+n+'"?'))return;var d=all();var r=[];for(var i=0;i<d.length;i++){if(d[i].name!==n){r.push(d[i])}}saveAll(r);render();msg('Da xoa: '+n)}
+function openRaw(n){var d=all();var p=null;for(var i=0;i<d.length;i++){if(d[i].name===n){p=d[i];break}}if(!p){msg('Khong tim thay raw');return}var w=window.open('','_blank');var h='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>'+p.name+' raw</title><style>body{background:#0d0d0d;color:#e0e0e0;font-family:Courier New,monospace;font-size:14px;padding:20px;white-space:pre-wrap;word-break:break-all}pre{margin:0}</style></head><body><pre>';
+var esc=p.content.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+h+=esc;h+='</pre></body></html>';w.document.write(h);w.document.close()}
+function handleRawRoute(){var params=new URLSearchParams(window.location.search);var rawName=params.get('raw');if(rawName){var d=all();var p=null;for(var i=0;i<d.length;i++){if(d[i].name===rawName){p=d[i];break}}if(p){var esc=p.content.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');document.body.innerHTML='<pre style="background:#0d0d0d;color:#e0e0e0;font-family:Courier New,monospace;font-size:14px;padding:20px;margin:0;white-space:pre-wrap;word-break:break-all;">'+esc+'</pre>';document.title=p.name+' raw'}else{document.body.innerHTML='<pre style="background:#0d0d0d;color:#ff4d4d;font-family:monospace;padding:20px;">404 — '+rawName+' khong ton tai</pre>';document.title='404 not found'}}}
+function render(){var c=document.getElementById('list');var d=all();if(d.length===0){c.innerHTML='<div class="info">Chua co raw nao</div>';return}d.sort(function(a,b){return new Date(b.updatedAt)-new Date(a.updatedAt)});var html='';for(var i=0;i<d.length;i++){var p=d[i];var u=window.location.origin+window.location.pathname+'?raw='+encodeURIComponent(p.name);html+='<div class="paste-item"><div class="paste-name">'+p.name+'</div><div class="actions"><a href="'+u+'" target="_blank" class="raw-link">RAW</a><button class="btn-del" onclick="del(\''+p.name.replace(/'/g,"\\'")+'\')">Xoa</button></div></div>'}c.innerHTML=html}
+if(window.location.search.includes('raw=')){handleRawRoute()}else{render()}
 </script>
-
 </body>
 </html>
